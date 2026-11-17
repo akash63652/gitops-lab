@@ -23,9 +23,12 @@ spec:
             - name: cron
               image: docker.io/library/nextcloud:28-apache
               command:
-                - php
-                - -f
-                - /var/www/html/cron.php
+                - su
+                - -s
+                - /bin/bash
+                - www-data
+                - -c
+                - php -f /var/www/html/cron.php
               volumeMounts:
                 - name: nextcloud-data
                   mountPath: /var/www/html
