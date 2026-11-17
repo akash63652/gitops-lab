@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: guestbook-ui
+spec:
+  to:
+    kind: Service
+    name: guestbook-ui
+  port:
+    targetPort: 8080
