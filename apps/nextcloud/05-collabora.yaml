@@ -34,11 +34,6 @@ spec:
               value: "admin"
             - name: password
               value: "CollaboraSecretPass123!"
-          securityContext:
-            capabilities:
-              add:
-                - MKNOD
-                - SYS_CHROOT
           resources:
             requests:
               memory: 512Mi
