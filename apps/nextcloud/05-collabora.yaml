@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collabora
+  namespace: nextcloud
+  labels:
+    app: collabora
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collabora
+  template:
+    metadata:
+      labels:
+        app: collabora
+    spec:
+      serviceAccountName: nextcloud
+      containers:
+        - name: collabora
+          image: docker.io/collabora/code:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9980
+              name: http
+          env:
+            - name: aliasgroup1
+              value: "https://nextcloud-nextcloud\\.apps\\.ocp4\\.navy\\.mil:443"
+            - name: extra_params
+              value: "--o:ssl.enable=false --o:ssl.termination=true"
+            - name: dictionaries
+              value: "en_US"
+            - name: username
+              value: "admin"
+            - name: password
+              value: "CollaboraSecretPass123!"
+          securityContext:
+            capabilities:
+              add:
+                - MKNOD
+                - SYS_CHROOT
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
+            limits:
+              memory: 2Gi
+              cpu: 2000m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collabora
+  namespace: nextcloud
+  labels:
+    app: collabora
+spec:
+  ports:
+    - port: 9980
+      targetPort: 9980
+      name: http
+  selector:
+    app: collabora
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: collabora
+  namespace: nextcloud
+  labels:
+    app: collabora
+spec:
+  to:
+    kind: Service
+    name: collabora
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

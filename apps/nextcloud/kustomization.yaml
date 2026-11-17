@@ -5,7 +5,11 @@ namespace: nextcloud
 
 resources:
   - serviceaccount.yaml
-  - pvc.yaml
-  - deployment.yaml
-  - service.yaml
-  - route.yaml
+  - 00-secrets.yaml
+  - 01-pvc.yaml
+  - 02-db-postgres.yaml
+  - 03-redis.yaml
+  - 04-nextcloud.yaml
+  - 05-collabora.yaml
+  - 06-db-view.yaml
+  - 07-cron.yaml

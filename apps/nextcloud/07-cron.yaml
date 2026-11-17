@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nextcloud-cron
+  namespace: nextcloud
+  labels:
+    app: nextcloud-cron
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: nextcloud-cron
+        spec:
+          serviceAccountName: nextcloud
+          restartPolicy: OnFailure
+          containers:
+            - name: cron
+              image: docker.io/library/nextcloud:28-apache
+              command:
+                - php
+                - -f
+                - /var/www/html/cron.php
+              volumeMounts:
+                - name: nextcloud-data
+                  mountPath: /var/www/html
+              resources:
+                requests:
+                  memory: 128Mi
+                  cpu: 50m
+                limits:
+                  memory: 512Mi
+                  cpu: 500m
+          volumes:
+            - name: nextcloud-data
+              persistentVolumeClaim:
+                claimName: nextcloud-data

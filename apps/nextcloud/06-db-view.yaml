@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-db-view
+  namespace: nextcloud
+  labels:
+    app: nextcloud-db-view
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud-db-view
+  template:
+    metadata:
+      labels:
+        app: nextcloud-db-view
+    spec:
+      serviceAccountName: nextcloud
+      containers:
+        - name: adminer
+          image: docker.io/library/adminer:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: ADMINER_DEFAULT_SERVER
+              value: nextcloud-db
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 50m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud-db-view
+  namespace: nextcloud
+  labels:
+    app: nextcloud-db-view
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: nextcloud-db-view
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: dbview
+  namespace: nextcloud
+  labels:
+    app: nextcloud-db-view
+spec:
+  to:
+    kind: Service
+    name: nextcloud-db-view
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
