@@ -57,18 +57,3 @@ spec:
         - name: db-data
           persistentVolumeClaim:
             claimName: nextcloud-db-data
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nextcloud-db
-  namespace: nextcloud
-  labels:
-    app: nextcloud-db
-spec:
-  ports:
-    - port: 5432
-      targetPort: 5432
-      name: postgres
-  selector:
-    app: nextcloud-db

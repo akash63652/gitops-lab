@@ -4,12 +4,27 @@ kind: Kustomization
 namespace: nextcloud
 
 resources:
+  # Shared / Base
   - serviceaccount.yaml
-  - 00-secrets.yaml
-  - 01-pvc.yaml
-  - 02-db-postgres.yaml
-  - 03-redis.yaml
-  - 04-nextcloud.yaml
-  - 05-collabora.yaml
-  - 06-db-view.yaml
-  - 07-cron.yaml
+  - secrets.yaml
+  # Nextcloud Core
+  - nextcloud/pvc.yaml
+  - nextcloud/deployment.yaml
+  - nextcloud/service.yaml
+  - nextcloud/route.yaml
+  - nextcloud/cronjob.yaml
+  # PostgreSQL
+  - postgres/pvc.yaml
+  - postgres/deployment.yaml
+  - postgres/service.yaml
+  # Redis
+  - redis/deployment.yaml
+  - redis/service.yaml
+  # Collabora
+  - collabora/deployment.yaml
+  - collabora/service.yaml
+  - collabora/route.yaml
+  # DB Viewer
+  - db-view/deployment.yaml
+  - db-view/service.yaml
+  - db-view/route.yaml

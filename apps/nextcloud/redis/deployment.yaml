@@ -40,18 +40,3 @@ spec:
             limits:
               memory: 256Mi
               cpu: 500m
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nextcloud-redis
-  namespace: nextcloud
-  labels:
-    app: nextcloud-redis
-spec:
-  ports:
-    - port: 6379
-      targetPort: 6379
-      name: redis
-  selector:
-    app: nextcloud-redis

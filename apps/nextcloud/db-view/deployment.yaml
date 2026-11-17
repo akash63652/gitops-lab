@@ -33,35 +33,3 @@ spec:
             limits:
               memory: 256Mi
               cpu: 500m
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nextcloud-db-view
-  namespace: nextcloud
-  labels:
-    app: nextcloud-db-view
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-      name: http
-  selector:
-    app: nextcloud-db-view
----
-apiVersion: route.openshift.io/v1
-kind: Route
-metadata:
-  name: dbview
-  namespace: nextcloud
-  labels:
-    app: nextcloud-db-view
-spec:
-  to:
-    kind: Service
-    name: nextcloud-db-view
-  port:
-    targetPort: http
-  tls:
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
