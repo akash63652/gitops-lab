@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+  labels:
+    app: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      serviceAccountName: nextcloud
+      containers:
+        - name: nextcloud
+          image: docker.io/library/nextcloud:28-apache
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: SQLITE_DATABASE
+              value: "nextcloud"
+            - name: NEXTCLOUD_ADMIN_USER
+              value: "admin"
+            - name: NEXTCLOUD_ADMIN_PASSWORD
+              value: "NextCloudAdmin123!"
+            - name: NEXTCLOUD_TRUSTED_DOMAINS
+              value: "nextcloud-nextcloud.apps.ocp4.navy.mil"
+          volumeMounts:
+            - name: nextcloud-data
+              mountPath: /var/www/html
+      volumes:
+        - name: nextcloud-data
+          persistentVolumeClaim:
+            claimName: nextcloud-data

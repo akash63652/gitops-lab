@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextcloud
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/akash63652/gitops-lab.git
+    targetRevision: main
+    path: apps/nextcloud
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nextcloud
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
