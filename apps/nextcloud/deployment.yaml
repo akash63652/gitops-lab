@@ -25,15 +25,6 @@ spec:
           ports:
             - containerPort: 80
               name: http
-          env:
-            - name: SQLITE_DATABASE
-              value: "nextcloud"
-            - name: NEXTCLOUD_ADMIN_USER
-              value: "admin"
-            - name: NEXTCLOUD_ADMIN_PASSWORD
-              value: "NextCloudAdmin123!"
-            - name: NEXTCLOUD_TRUSTED_DOMAINS
-              value: "nextcloud-nextcloud.apps.ocp4.navy.mil"
           volumeMounts:
             - name: nextcloud-data
               mountPath: /var/www/html
