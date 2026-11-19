@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: openshift-gitops
+  annotations:
+    # --- Image Updater Annotations ---
+    argocd-image-updater.argoproj.io/image-list: "nginx=nginxinc/nginx-unprivileged"
+    argocd-image-updater.argoproj.io/nginx.update-strategy: "latest"
+    argocd-image-updater.argoproj.io/write-back-method: "argocd"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/akash63652/gitops-lab.git
+    targetRevision: HEAD
+    path: nginx
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
