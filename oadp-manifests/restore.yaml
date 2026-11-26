@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: nextcloud-restore-1
+  namespace: openshift-adp
+spec:
+  backupName: nextcloud-backup-20261126
+  includedNamespaces:
+    - nextcloud
+  restorePVs: true

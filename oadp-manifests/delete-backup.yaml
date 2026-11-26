@@ -1,0 +1,7 @@
+apiVersion: velero.io/v1
+kind: DeleteBackupRequest
+metadata:
+  generateName: delete-backup-
+  namespace: openshift-adp
+spec:
+  backupName: nextcloud-backup-20261126
